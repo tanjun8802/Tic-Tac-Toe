@@ -36,7 +36,23 @@ class TicTacToeGame:
             for row in range(self.board_size)
         ]
         self._winning_combos = self._get_winning_combos()
-        
+
+    def _get_winning_combos(self): 
+        rows = [
+            [(move.row, move.col) for move in row]
+            for row in self._current_moves
+        ]
+        columns = [list(col) for col in zip(*rows)]
+        first_diagonal = [row[i] for i, row in enumerate(rows)]
+        second_diagonal = [col[j] for j, col in enumerate(reversed(columns))]
+        return rows + columns + [first_diagonal, second_diagonal]
+
+    def is_valid_move(self, move):
+        """Return True if move is valid, and False otherwise."""
+        row, col = move.row, move.col                                                              # gets the coordinates of the move
+        move_was_not_played = self._current_moves[row][col].label == ""                            # checks if the rol and col is still labeled as empty
+        no_winner = not self._has_winner                                                           # move is valid if no one wins yet
+        return no_winner and move_was_not_played
 
      
 class TicTacToeBoard(tk.Tk):
